@@ -1,5 +1,4 @@
-// Generated from Grammar.g4 by ANTLR 4.13.2
-package io.compiler.core;
+// Generated from /home/cortes/Documents/UFABC/Compiladores/Compiler/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
 
 	import java.util.ArrayList;
 	import java.util.Stack;
@@ -19,7 +18,7 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class GrammarLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.13.2", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =

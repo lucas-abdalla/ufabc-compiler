@@ -1,5 +1,4 @@
-// Generated from Grammar.g4 by ANTLR 4.13.2
-package io.compiler.core;
+// Generated from /home/cortes/Documents/UFABC/Compiladores/Compiler/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
 
 	import java.util.ArrayList;
 	import java.util.Stack;
@@ -68,30 +67,6 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmdIF(GrammarParser.CmdIFContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCmdWhile(GrammarParser.CmdWhileContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdWhile(GrammarParser.CmdWhileContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCmdDoWhile(GrammarParser.CmdDoWhileContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdDoWhile(GrammarParser.CmdDoWhileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

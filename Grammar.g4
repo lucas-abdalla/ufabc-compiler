@@ -77,6 +77,8 @@ comando     :  cmdAttrib
 			|  cmdLeitura
 			|  cmdEscrita
 			|  cmdIF
+         |  cmdWhile
+         |  cmdDoWhile
 			;
 			
 cmdIF		: 'se'  { stack.push(new ArrayList<Command>());
@@ -105,6 +107,50 @@ cmdIF		: 'se'  { stack.push(new ArrayList<Command>());
                	   stack.peek().add(currentIfCommand);
                }  			   
 			;
+
+cmdWhile	   : 'enquanto'  { stack.push(new ArrayList<Command>());
+                      strExpr = "";
+                      WhileCommand currentWhileCommand = new WhileCommand();
+                    }
+                  AP 
+                  expr
+                  OPREL  { strExpr += _input.LT(-1).getText(); }
+                  expr 
+                  FP  { currentWhileCommand.setExpression(strExpr); }
+                  '{'
+                     comando+
+                        {
+                           currentWhileCommand.setCommands(stack.pop());
+                        }  
+                  '}'
+                        {
+               	         stack.peek().add(currentWhileCommand);
+                        }  
+		   
+			;
+
+cmdDoWhile	   : 'faca'  { stack.push(new ArrayList<Command>());
+               strExpr = "";
+               DoWhileCommand currentDoWhileCommand = new DoWhileCommand();
+            }
+         '{'
+            comando+
+               {
+                  currentDoWhileCommand.setCommands(stack.pop());
+               }  
+         '}'
+         'enquanto'
+         AP 
+         expr
+         OPREL  { strExpr += _input.LT(-1).getText(); }
+         expr 
+         FP  { currentDoWhileCommand.setExpression(strExpr); }
+               {
+                  stack.peek().add(currentDoWhileCommand);
+               }
+
+;
+
 			
 cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
                        throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
