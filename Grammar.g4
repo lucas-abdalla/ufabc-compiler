@@ -15,8 +15,8 @@ grammar Grammar;
     private Types currentType;
     private Types leftType=null, rightType=null;
     private Program program = new Program();
-    private String strExpr = "";
-    private IfCommand currentIfCommand;
+    private Stack<String> strExprStack = new Stack<>();
+    private Stack<IfCommand> ifCommandStack = new Stack<>();
     
     private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
@@ -82,41 +82,41 @@ comando     :  cmdAttrib
 			;
 			
 cmdIF		: 'se'  { stack.push(new ArrayList<Command>());
-                      strExpr = "";
-                      currentIfCommand = new IfCommand();
+                     strExprStack.push("");
+                     ifCommandStack.push(new IfCommand());
                     } 
                AP 
                expr
-               OPREL  { strExpr += _input.LT(-1).getText(); }
+               OPREL  { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());}
                expr 
-               FP  { currentIfCommand.setExpression(strExpr); }
+               FP  { ifCommandStack.peek().setExpression(strExprStack.pop()); }
                'entao'  
                comando+                
                { 
-                  currentIfCommand.setTrueList(stack.pop());                            
+                  ifCommandStack.peek().setTrueList(stack.pop());                            
                }  
                ( 'senao'  
                   { stack.push(new ArrayList<Command>()); }
                  comando+
                  {
-                   currentIfCommand.setFalseList(stack.pop());
+                   ifCommandStack.peek().setFalseList(stack.pop());
                  }  
                )? 
                'fimse' 
                {
-               	   stack.peek().add(currentIfCommand);
+               	   stack.peek().add(ifCommandStack.pop());
                }  			   
 			;
 
 cmdWhile	   : 'enquanto'  { stack.push(new ArrayList<Command>());
-                      strExpr = "";
+                      strExprStack.push("");
                       WhileCommand currentWhileCommand = new WhileCommand();
                     }
                   AP 
                   expr
-                  OPREL  { strExpr += _input.LT(-1).getText(); }
+                  OPREL  { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());}
                   expr 
-                  FP  { currentWhileCommand.setExpression(strExpr); }
+                  FP  { currentWhileCommand.setExpression(strExprStack.pop()); }
                   '{'
                      comando+
                         {
@@ -130,7 +130,7 @@ cmdWhile	   : 'enquanto'  { stack.push(new ArrayList<Command>());
 			;
 
 cmdDoWhile	   : 'faca'  { stack.push(new ArrayList<Command>());
-               strExpr = "";
+               strExprStack.push("");
                DoWhileCommand currentDoWhileCommand = new DoWhileCommand();
             }
          '{'
@@ -142,9 +142,9 @@ cmdDoWhile	   : 'faca'  { stack.push(new ArrayList<Command>());
          'enquanto'
          AP 
          expr
-         OPREL  { strExpr += _input.LT(-1).getText(); }
+         OPREL  { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());}
          expr 
-         FP  { currentDoWhileCommand.setExpression(strExpr); }
+         FP  { currentDoWhileCommand.setExpression(strExprStack.pop()); }
                {
                   stack.peek().add(currentDoWhileCommand);
                }
@@ -192,7 +192,7 @@ cmdEscrita  : 'escreva' AP
 			;			
 
 			
-expr		:  termo  { strExpr += _input.LT(-1).getText(); } exprl 			
+expr		:  termo  { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());} exprl 			
 			;
 			
 termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
@@ -238,8 +238,8 @@ termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
 			         }
 			;
 			
-exprl		: ( OP { strExpr += _input.LT(-1).getText(); } 
-                termo { strExpr += _input.LT(-1).getText(); } 
+exprl		: ( OP { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); } 
+                termo { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); } 
               ) *
 			;	
 			

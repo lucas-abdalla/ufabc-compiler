@@ -17,7 +17,7 @@ public class MainClass {
 			GrammarParser parser;
 			
 			// crio o analisador léxico a partir da leitura de um arquivo
-			lexer = new GrammarLexer(CharStreams.fromFileName("inputs/programa.in"));
+			lexer = new GrammarLexer(CharStreams.fromFileName("ufabc-compiler/inputs/programa.in"));
 			
 			// agora a partir do analisador lexico, obtenho um fluxo de tokens
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
@@ -38,18 +38,25 @@ public class MainClass {
 				File f = new File(program.getName()+".java");
 				FileWriter fr = new FileWriter(f);
 				PrintWriter pr = new PrintWriter(fr);
-				pr.println(program.generateTarget());
+				pr.println(program.generateTargetJava());
 				pr.close();
+
+				File f2 = new File(program.getName()+".c");
+				FileWriter fr2 = new FileWriter(f2);
+				PrintWriter pr2 = new PrintWriter(fr2);
+				pr2.println(program.generateTargetC());
+				pr2.close();
 
 			} catch (IOException ex) {
 				ex.printStackTrace();
-			}
-			System.out.println(program.generateTarget());
-			
+			}			
 		}
 		catch(Exception ex) {
 			System.err.println("Error: "+ex.getMessage());
 			//ex.printStackTrace();
 		}
+
+		
+			
 	}
 }

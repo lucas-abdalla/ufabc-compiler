@@ -25,8 +25,13 @@ public class ReadCommand extends Command{
        
 
     @Override
-    public String generateTarget() {
+    public String generateTargetJava() {
         return var.getId() +"="+ ((var.getType()==Types.NUMBER)?" _scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
+    }
+
+    @Override
+    public String generateTargetC() {
+        return "scanf(\"\",&"+var.getId()+");\n";
     }
 
 }

@@ -29,7 +29,7 @@ public class Program {
     public void setCommandList(List<Command> commandList) {
         this.commandList = commandList;
     }
-    public String generateTarget() {
+    public String generateTargetJava() {
         StringBuilder str = new StringBuilder();
         str.append("import java.util.Scanner; \n");
         str.append("public class "+ name +"{\n");
@@ -45,7 +45,7 @@ public class Program {
             str.append(var.getId()+";\n");
         }
         for (Command cmd : commandList) {
-            str.append(cmd.generateTarget());
+            str.append(cmd.generateTargetJava());
         }
         str.append("_scTrx.close();\n");
         str.append("}\n");
@@ -53,5 +53,25 @@ public class Program {
         return str.toString();
     }
 
-    
+    public String generateTargetC() {
+        StringBuilder str = new StringBuilder();
+        str.append("#include <stdio.h> \n");
+        str.append("#include <stdlib.h> \n");
+        str.append("int main() {\n");
+        for (String varId : symbolTable.keySet()) {
+            Var var = symbolTable.get(varId);
+            if(var.getType() == Types.NUMBER){
+                str.append("int ");
+                str.append(var.getId()+";\n");
+            } else{ 
+                str.append("char ");
+                str.append(var.getId()+"[];\n");
+            }
+        }
+        for (Command cmd : commandList) {
+            str.append(cmd.generateTargetC());
+        }
+        str.append("}");
+        return str.toString();
+    }
 }

@@ -4,7 +4,12 @@ public class WriteCommand extends Command{
     private String content;
 
     @Override
-    public String generateTarget() {
+    public String generateTargetC() {
+        return "printf("+content+");\n";
+    }
+
+    @Override
+    public String generateTargetJava() {
         return "System.out.println("+content+");\n";
     }
 

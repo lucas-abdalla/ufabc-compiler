@@ -7,11 +7,17 @@ programa compilerTest
 		leia(b);
 		escreva(a);
 		se (a > 5) entao
-			escreva("maior que 5");
+			se (b > 4) entao
+				escreva("maior que 5");
+			fimse
 		senao
 		    escreva("menor que 5");
 		fimse
 		
+		faca{
+			escreva("menor que 5");
+		} enquanto(a>b)
+
 		escreva("oi agora vamos testar outro");
 		se (b >= 0) entao
 		   escreva("b positivo");

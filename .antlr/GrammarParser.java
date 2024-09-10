@@ -108,8 +108,8 @@ public class GrammarParser extends Parser {
 	    private Types currentType;
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
-	    private String strExpr = "";
-	    private IfCommand currentIfCommand;
+	    private Stack<String> strExprStack = new Stack<>();
+	    private Stack<IfCommand> ifCommandStack = new Stack<>();
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
@@ -434,8 +434,8 @@ public class GrammarParser extends Parser {
 			setState(72);
 			match(T__7);
 			 stack.push(new ArrayList<Command>());
-			                      strExpr = "";
-			                      currentIfCommand = new IfCommand();
+			                     strExprStack.push("");
+			                     ifCommandStack.push(new IfCommand());
 			                    
 			setState(74);
 			match(AP);
@@ -443,12 +443,12 @@ public class GrammarParser extends Parser {
 			expr();
 			setState(76);
 			match(OPREL);
-			 strExpr += _input.LT(-1).getText(); 
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
 			setState(78);
 			expr();
 			setState(79);
 			match(FP);
-			 currentIfCommand.setExpression(strExpr); 
+			 ifCommandStack.peek().setExpression(strExprStack.pop()); 
 			setState(81);
 			match(T__8);
 			setState(83); 
@@ -466,7 +466,7 @@ public class GrammarParser extends Parser {
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2330880L) != 0) );
 			 
-			                  currentIfCommand.setTrueList(stack.pop());                            
+			                  ifCommandStack.peek().setTrueList(stack.pop());                            
 			               
 			setState(97);
 			_errHandler.sync(this);
@@ -491,7 +491,7 @@ public class GrammarParser extends Parser {
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2330880L) != 0) );
 
-				                   currentIfCommand.setFalseList(stack.pop());
+				                   ifCommandStack.peek().setFalseList(stack.pop());
 				                 
 				}
 			}
@@ -499,7 +499,7 @@ public class GrammarParser extends Parser {
 			setState(99);
 			match(T__10);
 
-			               	   stack.peek().add(currentIfCommand);
+			               	   stack.peek().add(ifCommandStack.pop());
 			               
 			}
 		}
@@ -547,7 +547,7 @@ public class GrammarParser extends Parser {
 			setState(102);
 			match(T__11);
 			 stack.push(new ArrayList<Command>());
-			                      strExpr = "";
+			                      strExprStack.push("");
 			                      WhileCommand currentWhileCommand = new WhileCommand();
 			                    
 			setState(104);
@@ -556,12 +556,12 @@ public class GrammarParser extends Parser {
 			expr();
 			setState(106);
 			match(OPREL);
-			 strExpr += _input.LT(-1).getText(); 
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
 			setState(108);
 			expr();
 			setState(109);
 			match(FP);
-			 currentWhileCommand.setExpression(strExpr); 
+			 currentWhileCommand.setExpression(strExprStack.pop()); 
 			setState(111);
 			match(T__12);
 			setState(113); 
@@ -632,7 +632,7 @@ public class GrammarParser extends Parser {
 			setState(121);
 			match(T__14);
 			 stack.push(new ArrayList<Command>());
-			               strExpr = "";
+			               strExprStack.push("");
 			               DoWhileCommand currentDoWhileCommand = new DoWhileCommand();
 			            
 			setState(123);
@@ -664,12 +664,12 @@ public class GrammarParser extends Parser {
 			expr();
 			setState(134);
 			match(OPREL);
-			 strExpr += _input.LT(-1).getText(); 
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
 			setState(136);
 			expr();
 			setState(137);
 			match(FP);
-			 currentDoWhileCommand.setExpression(strExpr); 
+			 currentDoWhileCommand.setExpression(strExprStack.pop()); 
 
 			                  stack.peek().add(currentDoWhileCommand);
 			               
@@ -859,7 +859,7 @@ public class GrammarParser extends Parser {
 			{
 			setState(164);
 			termo();
-			 strExpr += _input.LT(-1).getText(); 
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
 			setState(166);
 			exprl();
 			}
@@ -1003,10 +1003,10 @@ public class GrammarParser extends Parser {
 				{
 				setState(176);
 				match(OP);
-				 strExpr += _input.LT(-1).getText(); 
+				 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
 				setState(178);
 				termo();
-				 strExpr += _input.LT(-1).getText(); 
+				 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
 				}
 				}
 				setState(185);

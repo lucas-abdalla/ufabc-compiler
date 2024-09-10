@@ -43,16 +43,37 @@ public class IfCommand extends Command{
     }
 
     @Override
-    public String generateTarget() {
+    public String generateTargetJava() {
         StringBuilder str = new StringBuilder();
         str.append("if("+expression+"){");
         for (Command cmd : trueList) {
-            str.append(cmd.generateTarget());
+            str.append(cmd.generateTargetJava());
         }
-        if(!falseList.isEmpty()){
-            str.append("} else {");
-            for (Command cmd : falseList) {
-                str.append(cmd.generateTarget());
+        if(falseList!= null){
+            if(!falseList.isEmpty()){
+                str.append("} else {");
+                for (Command cmd : falseList) {
+                    str.append(cmd.generateTargetJava());
+                }
+            }
+        }
+        str.append("}");
+        return str.toString();
+    }
+
+    @Override
+    public String generateTargetC() {
+        StringBuilder str = new StringBuilder();
+        str.append("if("+expression+"){");
+        for (Command cmd : trueList) {
+            str.append(cmd.generateTargetC());
+        }
+        if(falseList!= null){
+            if(!falseList.isEmpty()){
+                str.append("} else {");
+                for (Command cmd : falseList) {
+                    str.append(cmd.generateTargetC());
+                }
             }
         }
         str.append("}");

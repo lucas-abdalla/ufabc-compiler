@@ -102,8 +102,8 @@ public class GrammarLexer extends Lexer {
 	    private Types currentType;
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
-	    private String strExpr = "";
-	    private IfCommand currentIfCommand;
+	    private Stack<String> strExprStack = new Stack<>();
+	    private Stack<IfCommand> ifCommandStack = new Stack<>();
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
