@@ -181,7 +181,8 @@ public class GrammarParser extends Parser {
 			setState(25);
 			match(ID);
 			 program.setName(_input.LT(-1).getText());
-			                               stack.push(new ArrayList<Command>()); 
+			                               stack.push(new ArrayList<Command>());
+			                               strExprStack.push("");
 			                             
 			setState(28); 
 			_errHandler.sync(this);

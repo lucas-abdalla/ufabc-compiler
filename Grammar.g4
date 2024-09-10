@@ -43,7 +43,8 @@ grammar Grammar;
 }
  
 programa	: 'programa' ID  { program.setName(_input.LT(-1).getText());
-                               stack.push(new ArrayList<Command>()); 
+                               stack.push(new ArrayList<Command>());
+                               strExprStack.push("");
                              }
                declaravar+
                'inicio'

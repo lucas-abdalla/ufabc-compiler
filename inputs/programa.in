@@ -6,6 +6,7 @@ programa compilerTest
 		leia(a);
 		leia(b);
 		escreva(a);
+		a := 5;
 		se (a > 5) entao
 			se (b > 4) entao
 				escreva("maior que 5");
