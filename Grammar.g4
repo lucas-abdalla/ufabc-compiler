@@ -22,18 +22,12 @@ grammar Grammar;
     private Stack<AttributeCommand> attribCommandStack = new Stack<>();
     private Stack<WhileCommand> whileCommandStack = new Stack<>();
     private Stack<DoWhileCommand> doWhileCommandStack = new Stack<>();
-    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
+    private Stack<ArrayList<Command>> stack = new Stack<>();
 
     public void updateType() {
         for (Var v : currentDecl) {
             v.setType(currentType);
             symbolTable.put(v.getId(), v);
-        }
-    }
-
-    public void exibirVar(){
-        for (String id: symbolTable.keySet()){
-        	System.out.println(symbolTable.get(id));
         }
     }
 
@@ -45,10 +39,10 @@ grammar Grammar;
         }
     }
 
-    public void checkUndeclaredVariables() {
-        for (String id : usedVariables) {
-            if (!symbolTable.containsKey(id)) {
-                System.out.println("Warning: Variable " + id + " used but not declared.");
+    public void checkUninitializedVariables() {
+        for (String id : symbolTable.keySet()) {
+            if (!symbolTable.get(id).isInitialized()) {
+                System.out.println("Warning: Variable " + id + " declared but not initialized.");
             }
         }
     }
@@ -71,7 +65,7 @@ programa : 'programa' ID
             'fimprog'
             { 
                 checkUnusedVariables();
-                checkUndeclaredVariables();
+                checkUninitializedVariables();
                 program.setSymbolTable(symbolTable);
                 program.setCommandList(stack.pop());
             }
