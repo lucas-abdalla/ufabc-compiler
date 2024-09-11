@@ -6,7 +6,8 @@ programa compilerTest
 		leia(a);
 		leia(b);
 		escreva(a);
-		a := 5;
+		b := 5 + 4 + 2 + 1;
+		b := 3;
 		se (a > 5) entao
 			se (b > 4) entao
 				escreva("maior que 5");
@@ -17,7 +18,16 @@ programa compilerTest
 		
 		faca{
 			escreva("menor que 5");
-		} enquanto(a>b)
+			faca{
+				escreva("0");
+			} enquanto(a>0);
+		} enquanto(a>b);
+
+		enquanto(a>1){
+			enquanto(b>1){
+				escreva("x");
+			}
+		}
 
 		escreva("oi agora vamos testar outro");
 		se (b >= 0) entao

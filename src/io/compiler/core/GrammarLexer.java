@@ -105,6 +105,9 @@ public class GrammarLexer extends Lexer {
 	    private Program program = new Program();
 	    private Stack<String> strExprStack = new Stack<>();
 	    private Stack<IfCommand> ifCommandStack = new Stack<>();
+	    private Stack<AttributeCommand> attribCommandStack = new Stack<>();
+	    private Stack<WhileCommand> whileCommandStack = new Stack<>();
+	    private Stack<DoWhileCommand> doWhileCommandStack = new Stack<>();
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    

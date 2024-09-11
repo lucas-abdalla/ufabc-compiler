@@ -17,6 +17,9 @@ grammar Grammar;
     private Program program = new Program();
     private Stack<String> strExprStack = new Stack<>();
     private Stack<IfCommand> ifCommandStack = new Stack<>();
+    private Stack<AttributeCommand> attribCommandStack = new Stack<>();
+    private Stack<WhileCommand> whileCommandStack = new Stack<>();
+    private Stack<DoWhileCommand> doWhileCommandStack = new Stack<>();
     
     private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
@@ -111,33 +114,33 @@ cmdIF		: 'se'  { stack.push(new ArrayList<Command>());
 
 cmdWhile	   : 'enquanto'  { stack.push(new ArrayList<Command>());
                       strExprStack.push("");
-                      WhileCommand currentWhileCommand = new WhileCommand();
+                      whileCommandStack.push(new WhileCommand());
                     }
                   AP 
                   expr
                   OPREL  { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());}
                   expr 
-                  FP  { currentWhileCommand.setExpression(strExprStack.pop()); }
+                  FP  { whileCommandStack.peek().setExpression(strExprStack.pop()); }
                   '{'
                      comando+
                         {
-                           currentWhileCommand.setCommands(stack.pop());
+                           whileCommandStack.peek().setCommands(stack.pop());
                         }  
                   '}'
                         {
-               	         stack.peek().add(currentWhileCommand);
+               	         stack.peek().add(whileCommandStack.pop());
                         }  
 		   
 			;
 
 cmdDoWhile	   : 'faca'  { stack.push(new ArrayList<Command>());
                strExprStack.push("");
-               DoWhileCommand currentDoWhileCommand = new DoWhileCommand();
+               doWhileCommandStack.push(new DoWhileCommand());
             }
          '{'
             comando+
                {
-                  currentDoWhileCommand.setCommands(stack.pop());
+                  doWhileCommandStack.peek().setCommands(stack.pop());
                }  
          '}'
          'enquanto'
@@ -145,10 +148,11 @@ cmdDoWhile	   : 'faca'  { stack.push(new ArrayList<Command>());
          expr
          OPREL  { strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());}
          expr 
-         FP  { currentDoWhileCommand.setExpression(strExprStack.pop()); }
+         FP  { doWhileCommandStack.peek().setExpression(strExprStack.pop()); }
                {
-                  stack.peek().add(currentDoWhileCommand);
+                  stack.peek().add(doWhileCommandStack.pop());
                }
+         PV
 
 ;
 
@@ -158,17 +162,17 @@ cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
                    }
                    symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
                    leftType = symbolTable.get(_input.LT(-1).getText()).getType();
+                   strExprStack.push("");
+                   attribCommandStack.push(new AttributeCommand(symbolTable.get(_input.LT(-1).getText()).getId()));
                  }
               OP_AT 
-              expr 
+              expr {attribCommandStack.peek().setContent(strExprStack.pop());}
               PV
-              
               {
-                 System.out.println("Left  Side Expression Type = "+leftType);
-                 System.out.println("Right Side Expression Type = "+rightType);
-                 if (leftType.getValue() < rightType.getValue()){
+                 if(leftType.getValue() < rightType.getValue()){
                     throw new UFABCSemanticException("Type Mismatchig on Assignment");
                  }
+                 stack.peek().add(attribCommandStack.pop());
               }
 			;			
 			
