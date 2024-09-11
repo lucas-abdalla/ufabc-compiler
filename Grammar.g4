@@ -152,6 +152,7 @@ cmdDoWhile	   : 'faca'  { stack.push(new ArrayList<Command>());
                {
                   stack.peek().add(doWhileCommandStack.pop());
                }
+         PV
 
 ;
 

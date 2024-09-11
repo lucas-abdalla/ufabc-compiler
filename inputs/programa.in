@@ -18,7 +18,16 @@ programa compilerTest
 		
 		faca{
 			escreva("menor que 5");
-		} enquanto(a>b)
+			faca{
+				escreva("0");
+			} enquanto(a>0);
+		} enquanto(a>b);
+
+		enquanto(a>1){
+			enquanto(b>1){
+				escreva("x");
+			}
+		}
 
 		escreva("oi agora vamos testar outro");
 		se (b >= 0) entao

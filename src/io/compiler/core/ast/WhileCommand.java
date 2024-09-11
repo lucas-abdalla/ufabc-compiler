@@ -40,7 +40,7 @@ public class WhileCommand extends Command{
         for (Command cmd : while_Commands) {
             str.append(cmd.generateTargetJava());
         }
-        str.append("};");
+        str.append("}");
         return str.toString();
     }
 
@@ -51,7 +51,7 @@ public class WhileCommand extends Command{
         for (Command cmd : while_Commands) {
             str.append(cmd.generateTargetC());
         }
-        str.append("};");
+        str.append("}");
         return str.toString();
     }
 
