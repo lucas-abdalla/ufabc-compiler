@@ -1,4 +1,4 @@
-// Generated from /home/cortes/Documents/UFABC/Compiladores/Compiler/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
+// Generated from /home/lucasabdalla/Documentos/GitHub/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
 
 	import java.util.ArrayList;
 	import java.util.Stack;

@@ -1,4 +1,4 @@
-// Generated from /home/cortes/Documents/UFABC/Compiladores/Compiler/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
+// Generated from /home/lucasabdalla/Documentos/GitHub/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
 
 	import java.util.ArrayList;
 	import java.util.Stack;
@@ -54,6 +54,26 @@ public interface GrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmdIF(GrammarParser.CmdIFContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#cmdWhile}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdWhile(GrammarParser.CmdWhileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#cmdWhile}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdWhile(GrammarParser.CmdWhileContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#cmdDoWhile}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdDoWhile(GrammarParser.CmdDoWhileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#cmdDoWhile}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdDoWhile(GrammarParser.CmdDoWhileContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#cmdAttrib}.
 	 * @param ctx the parse tree
