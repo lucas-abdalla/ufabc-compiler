@@ -1,0 +1,41 @@
+programa compilerTest
+	declare a,b,c,d: number;
+	inicio
+		escreva("Hello World");
+		escreva("Fim do programa");
+		leia(a);
+		leia(b);
+		escreva(a);
+		b := 5 + 4 + 2 + 1;
+		b := 3;
+		se (a > 5) entao
+			se (b > 4) entao
+				escreva("maior que 5");
+			fimse
+		senao
+		    escreva("menor que 5");
+		fimse
+		
+		faca{
+			escreva("menor que 5");
+			faca{
+				escreva("0");
+			} enquanto(a>0);
+		} enquanto(a>b);
+
+		enquanto(a>1){
+			enquanto(b>1){
+				escreva("x");
+			}
+		}
+
+		escreva("oi agora vamos testar outro");
+		se (b >= 0) entao
+		   escreva("b positivo");
+		senao
+		   escreva("b negativo");
+		fimse
+		
+		
+	fim
+fimprog

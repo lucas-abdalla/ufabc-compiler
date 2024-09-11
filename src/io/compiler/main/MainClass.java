@@ -17,7 +17,7 @@ public class MainClass {
 			GrammarParser parser;
 			
 			// crio o analisador léxico a partir da leitura de um arquivo
-			lexer = new GrammarLexer(CharStreams.fromFileName("ufabc-compiler/inputs/programa.in"));
+			lexer = new GrammarLexer(CharStreams.fromFileName("/home/lucasabdalla/Documentos/GitHub/ufabc-compiler/inputs/teste.in"));
 			
 			// agora a partir do analisador lexico, obtenho um fluxo de tokens
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
