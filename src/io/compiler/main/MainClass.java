@@ -1,62 +1,54 @@
 package io.compiler.main;
+
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.CharStreams;
+import io.compiler.core.GrammarLexer;
+import io.compiler.core.GrammarParser;
+import io.compiler.core.ast.Program;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.antlr.v4.runtime.CharStreams;
-import io.compiler.core.GrammarLexer;
-import io.compiler.core.GrammarParser;
-import io.compiler.core.ast.Program;
 public class MainClass {
-	public static void main(String[] args) {
-		try {
-			GrammarLexer lexer;
-			GrammarParser parser;
-			
-			// crio o analisador léxico a partir da leitura de um arquivo
-			lexer = new GrammarLexer(CharStreams.fromFileName("/home/lucasabdalla/Documentos/GitHub/ufabc-compiler/inputs/teste.in"));
-			
-			// agora a partir do analisador lexico, obtenho um fluxo de tokens
-			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-			
-			// crio o parser a partir do tokenStream
-			parser = new GrammarParser(tokenStream);
-			
-			
-			// agora eu quero chamar do meu jeito
-			System.out.println("UFABC Compiler");
-			parser.programa();
-			System.out.println("Compilation Successfully - Good Job");
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Usage: java MainClass <file-path>");
+            System.exit(1);
+        }
 
-			//geracao de codigo
-			Program program = parser.getProgram();
+        String filePath = args[0];
 
-			try {
-				File f = new File(program.getName()+".java");
-				FileWriter fr = new FileWriter(f);
-				PrintWriter pr = new PrintWriter(fr);
-				pr.println(program.generateTargetJava());
-				pr.close();
+        try {
+            GrammarLexer lexer = new GrammarLexer(CharStreams.fromFileName(filePath));
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            GrammarParser parser = new GrammarParser(tokenStream);
 
-				File f2 = new File(program.getName()+".c");
-				FileWriter fr2 = new FileWriter(f2);
-				PrintWriter pr2 = new PrintWriter(fr2);
-				pr2.println(program.generateTargetC());
-				pr2.close();
+            System.out.println("UFABC Compiler");
+            parser.programa();
+            System.out.println("Compilation Successfully - Good Job");
 
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}			
-		}
-		catch(Exception ex) {
-			System.err.println("Error: "+ex.getMessage());
-			//ex.printStackTrace();
-		}
+            Program program = parser.getProgram();
 
-		
-			
-	}
+            try {
+                File javaFile = new File(program.getName() + ".java");
+                FileWriter javaWriter = new FileWriter(javaFile);
+                PrintWriter javaPrinter = new PrintWriter(javaWriter);
+                javaPrinter.println(program.generateTargetJava());
+                javaPrinter.close();
+
+                File cFile = new File(program.getName() + ".c");
+                FileWriter cWriter = new FileWriter(cFile);
+                PrintWriter cPrinter = new PrintWriter(cWriter);
+                cPrinter.println(program.generateTargetC());
+                cPrinter.close();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.err.println("Error: " + ex.getMessage());
+        }
+    }
 }
