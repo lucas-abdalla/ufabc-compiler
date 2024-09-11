@@ -1,12 +1,13 @@
 // Generated from Grammar.g4 by ANTLR 4.13.2
 package io.compiler.core;
 
-	import java.util.ArrayList;
-	import java.util.Stack;
-	import java.util.HashMap;
-	import io.compiler.types.*;
-	import io.compiler.core.exceptions.*;
-	import io.compiler.core.ast.*;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.HashSet;
+    import java.util.Stack;
+    import io.compiler.types.*;
+    import io.compiler.core.exceptions.*;
+    import io.compiler.core.ast.*;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -104,38 +105,54 @@ public class GrammarParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	    private HashMap<String,Var> symbolTable = new HashMap<String, Var>();
-	    private ArrayList<Var> currentDecl = new ArrayList<Var>();
+	    private HashMap<String, Var> symbolTable = new HashMap<>();
+	    private HashSet<String> usedVariables = new HashSet<>();
+	    private ArrayList<Var> currentDecl = new ArrayList<>();
 	    private Types currentType;
-	    private Types leftType=null, rightType=null;
+	    private Types leftType = null, rightType = null;
 	    private Program program = new Program();
 	    private Stack<String> strExprStack = new Stack<>();
 	    private Stack<IfCommand> ifCommandStack = new Stack<>();
 	    private Stack<AttributeCommand> attribCommandStack = new Stack<>();
 	    private Stack<WhileCommand> whileCommandStack = new Stack<>();
 	    private Stack<DoWhileCommand> doWhileCommandStack = new Stack<>();
-	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
-	    
-	    
-	    public void updateType(){
-	    	for(Var v: currentDecl){
-	    	   v.setType(currentType);
-	    	   symbolTable.put(v.getId(), v);
-	    	}
+
+	    public void updateType() {
+	        for (Var v : currentDecl) {
+	            v.setType(currentType);
+	            symbolTable.put(v.getId(), v);
+	        }
 	    }
+
 	    public void exibirVar(){
 	        for (String id: symbolTable.keySet()){
 	        	System.out.println(symbolTable.get(id));
 	        }
 	    }
-	    
-	    public Program getProgram(){
-	    	return this.program;
-	    	}
-	    
-	    public boolean isDeclared(String id){
-	    	return symbolTable.get(id) != null;
+
+	    public void checkUnusedVariables() {
+	        for (String id : symbolTable.keySet()) {
+	            if (!usedVariables.contains(id)) {
+	                System.out.println("Warning: Variable " + id + " declared but not used.");
+	            }
+	        }
+	    }
+
+	    public void checkUndeclaredVariables() {
+	        for (String id : usedVariables) {
+	            if (!symbolTable.containsKey(id)) {
+	                System.out.println("Warning: Variable " + id + " used but not declared.");
+	            }
+	        }
+	    }
+
+	    public Program getProgram() {
+	        return this.program;
+	    }
+
+	    public boolean isDeclared(String id) {
+	        return symbolTable.get(id) != null;
 	    }
 
 	public GrammarParser(TokenStream input) {
@@ -183,10 +200,7 @@ public class GrammarParser extends Parser {
 			match(T__0);
 			setState(25);
 			match(ID);
-			 program.setName(_input.LT(-1).getText());
-			                               stack.push(new ArrayList<Command>());
-			                               strExprStack.push("");
-			                             
+			 program.setName(_input.LT(-1).getText()); stack.push(new ArrayList<Command>()); strExprStack.push(""); 
 			setState(28); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -221,10 +235,12 @@ public class GrammarParser extends Parser {
 			match(T__2);
 			setState(39);
 			match(T__3);
-
-			                  program.setSymbolTable(symbolTable);
-			                  program.setCommandList(stack.pop());
-			               
+			 
+			                checkUnusedVariables();
+			                checkUndeclaredVariables();
+			                program.setSymbolTable(symbolTable);
+			                program.setCommandList(stack.pop());
+			            
 			}
 		}
 		catch (RecognitionException re) {
@@ -276,7 +292,7 @@ public class GrammarParser extends Parser {
 			 currentDecl.clear(); 
 			setState(44);
 			match(ID);
-			 currentDecl.add(new Var(_input.LT(-1).getText()));
+			 currentDecl.add(new Var(_input.LT(-1).getText())); 
 			setState(51);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -287,7 +303,7 @@ public class GrammarParser extends Parser {
 				match(VIRG);
 				setState(47);
 				match(ID);
-				 currentDecl.add(new Var(_input.LT(-1).getText()));
+				 currentDecl.add(new Var(_input.LT(-1).getText())); 
 				}
 				}
 				setState(53);
@@ -303,14 +319,14 @@ public class GrammarParser extends Parser {
 				{
 				setState(55);
 				match(T__5);
-				currentType = Types.NUMBER;
+				 currentType = Types.NUMBER; 
 				}
 				break;
 			case T__6:
 				{
 				setState(57);
 				match(T__6);
-				currentType = Types.TEXT;
+				 currentType = Types.TEXT; 
 				}
 				break;
 			default:
@@ -470,17 +486,14 @@ public class GrammarParser extends Parser {
 			{
 			setState(72);
 			match(T__7);
-			 stack.push(new ArrayList<Command>());
-			                     strExprStack.push("");
-			                     ifCommandStack.push(new IfCommand());
-			                    
+			 stack.push(new ArrayList<Command>()); strExprStack.push(""); ifCommandStack.push(new IfCommand()); 
 			setState(74);
 			match(AP);
 			setState(75);
 			expr();
 			setState(76);
 			match(OPREL);
-			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
 			setState(78);
 			expr();
 			setState(79);
@@ -502,9 +515,7 @@ public class GrammarParser extends Parser {
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2330880L) != 0) );
-			 
-			                  ifCommandStack.peek().setTrueList(stack.pop());                            
-			               
+			 ifCommandStack.peek().setTrueList(stack.pop()); 
 			setState(97);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -527,17 +538,13 @@ public class GrammarParser extends Parser {
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2330880L) != 0) );
-
-				                   ifCommandStack.peek().setFalseList(stack.pop());
-				                 
+				 ifCommandStack.peek().setFalseList(stack.pop()); 
 				}
 			}
 
 			setState(99);
 			match(T__10);
-
-			               	   stack.peek().add(ifCommandStack.pop());
-			               
+			 stack.peek().add(ifCommandStack.pop()); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -591,17 +598,14 @@ public class GrammarParser extends Parser {
 			{
 			setState(102);
 			match(T__11);
-			 stack.push(new ArrayList<Command>());
-			                      strExprStack.push("");
-			                      whileCommandStack.push(new WhileCommand());
-			                    
+			 stack.push(new ArrayList<Command>()); strExprStack.push(""); whileCommandStack.push(new WhileCommand()); 
 			setState(104);
 			match(AP);
 			setState(105);
 			expr();
 			setState(106);
 			match(OPREL);
-			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
 			setState(108);
 			expr();
 			setState(109);
@@ -623,14 +627,10 @@ public class GrammarParser extends Parser {
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2330880L) != 0) );
-
-			                           whileCommandStack.peek().setCommands(stack.pop());
-			                        
+			 whileCommandStack.peek().setCommands(stack.pop()); 
 			setState(118);
 			match(T__13);
-
-			               	         stack.peek().add(whileCommandStack.pop());
-			                        
+			 stack.peek().add(whileCommandStack.pop()); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -685,10 +685,7 @@ public class GrammarParser extends Parser {
 			{
 			setState(121);
 			match(T__14);
-			 stack.push(new ArrayList<Command>());
-			               strExprStack.push("");
-			               doWhileCommandStack.push(new DoWhileCommand());
-			            
+			 stack.push(new ArrayList<Command>()); strExprStack.push(""); doWhileCommandStack.push(new DoWhileCommand()); 
 			setState(123);
 			match(T__12);
 			setState(125); 
@@ -705,9 +702,7 @@ public class GrammarParser extends Parser {
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2330880L) != 0) );
-
-			                  doWhileCommandStack.peek().setCommands(stack.pop());
-			               
+			 doWhileCommandStack.peek().setCommands(stack.pop()); 
 			setState(130);
 			match(T__13);
 			setState(131);
@@ -718,17 +713,15 @@ public class GrammarParser extends Parser {
 			expr();
 			setState(134);
 			match(OPREL);
-			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
 			setState(136);
 			expr();
 			setState(137);
 			match(FP);
 			 doWhileCommandStack.peek().setExpression(strExprStack.pop()); 
-
-			                  stack.peek().add(doWhileCommandStack.pop());
-			               
-			setState(140);
+			setState(139);
 			match(PV);
+			 stack.peek().add(doWhileCommandStack.pop()); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -772,27 +765,20 @@ public class GrammarParser extends Parser {
 			{
 			setState(142);
 			match(ID);
-			 if (!isDeclared(_input.LT(-1).getText())) {
-			                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-			                   }
-			                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
-			                   strExprStack.push("");
-			                   attribCommandStack.push(new AttributeCommand(symbolTable.get(_input.LT(-1).getText()).getId()));
-			                 
+			 if (!isDeclared(_input.LT(-1).getText())) { throw new UFABCSemanticException("Undeclared Variable: " + _input.LT(-1).getText()); } 
+			                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true); 
+			                   leftType = symbolTable.get(_input.LT(-1).getText()).getType(); 
+			                   strExprStack.push(""); 
+			                   attribCommandStack.push(new AttributeCommand(symbolTable.get(_input.LT(-1).getText()).getId())); 
 			setState(144);
 			match(OP_AT);
 			setState(145);
 			expr();
-			attribCommandStack.peek().setContent(strExprStack.pop());
+			 attribCommandStack.peek().setContent(strExprStack.pop()); 
 			setState(147);
 			match(PV);
-
-			                 if(leftType.getValue() < rightType.getValue()){
-			                    throw new UFABCSemanticException("Type Mismatchig on Assignment");
-			                 }
-			                 stack.peek().add(attribCommandStack.pop());
-			              
+			 if (leftType.getValue() < rightType.getValue()) { throw new UFABCSemanticException("Type Mismatch on Assignment"); } 
+			                stack.peek().add(attribCommandStack.pop()); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -838,13 +824,10 @@ public class GrammarParser extends Parser {
 			match(AP);
 			setState(152);
 			match(ID);
-			 if (!isDeclared(_input.LT(-1).getText())) {
-			                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-			                    }
-			                    symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                    Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-			                    stack.peek().add(cmdRead);
-			                  
+			 if (!isDeclared(_input.LT(-1).getText())) { throw new UFABCSemanticException("Undeclared Variable: " + _input.LT(-1).getText()); } 
+			                              symbolTable.get(_input.LT(-1).getText()).setInitialized(true); 
+			                              Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText())); 
+			                              stack.peek().add(cmdRead); 
 			setState(154);
 			match(FP);
 			setState(155);
@@ -865,11 +848,11 @@ public class GrammarParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class CmdEscritaContext extends ParserRuleContext {
 		public TerminalNode AP() { return getToken(GrammarParser.AP, 0); }
-		public TerminalNode FP() { return getToken(GrammarParser.FP, 0); }
-		public TerminalNode PV() { return getToken(GrammarParser.PV, 0); }
 		public TermoContext termo() {
 			return getRuleContext(TermoContext.class,0);
 		}
+		public TerminalNode FP() { return getToken(GrammarParser.FP, 0); }
+		public TerminalNode PV() { return getToken(GrammarParser.PV, 0); }
 		public CmdEscritaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -894,18 +877,14 @@ public class GrammarParser extends Parser {
 			match(T__16);
 			setState(158);
 			match(AP);
-			{
 			setState(159);
 			termo();
-			 Command cmdWrite = new WriteCommand(_input.LT(-1).getText());
-			                         stack.peek().add(cmdWrite);
-			                       
-			}
-			setState(162);
+			 Command cmdWrite = new WriteCommand(_input.LT(-1).getText()); stack.peek().add(cmdWrite); 
+			setState(161);
 			match(FP);
-			setState(163);
+			setState(162);
 			match(PV);
-			 rightType = null;
+			 rightType = null; 
 			}
 		}
 		catch (RecognitionException re) {
@@ -947,10 +926,10 @@ public class GrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(166);
+			setState(165);
 			termo();
-			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText());
-			setState(168);
+			 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
+			setState(167);
 			exprl();
 			}
 		}
@@ -988,69 +967,37 @@ public class GrammarParser extends Parser {
 		TermoContext _localctx = new TermoContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_termo);
 		try {
-			setState(176);
+			setState(175);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case ID:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(170);
+				setState(169);
 				match(ID);
-				 if (!isDeclared(_input.LT(-1).getText())) {
-				                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-				                    }
-				                    if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
-				                       throw new UFABCSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
-				                    }
-				                    if (rightType == null){
-				                       rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-				                       //System.out.println("Encontrei pela 1a vez uma variavel = "+rightType);
-				                    }   
-				                    else{
-				                       if (symbolTable.get(_input.LT(-1).getText()).getType().getValue() > rightType.getValue()){
-				                          rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-				                          //System.out.println("Ja havia tipo declarado e mudou para = "+rightType);
-				                          
-				                       }
-				                    }
-				                  
+				 if (!isDeclared(_input.LT(-1).getText())) { throw new UFABCSemanticException("Undeclared Variable: " + _input.LT(-1).getText()); } 
+				              if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()) { throw new UFABCSemanticException("Variable " + _input.LT(-1).getText() + " has no value assigned"); } 
+				              if (rightType == null) { rightType = symbolTable.get(_input.LT(-1).getText()).getType(); } 
+				              else { if (symbolTable.get(_input.LT(-1).getText()).getType().getValue() > rightType.getValue()) { rightType = symbolTable.get(_input.LT(-1).getText()).getType(); } } 
+				              usedVariables.add(_input.LT(-1).getText()); 
 				}
 				break;
 			case NUM:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(172);
+				setState(171);
 				match(NUM);
-				  if (rightType == null) {
-							 				rightType = Types.NUMBER;
-							 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
-							            }
-							            else{
-							                if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
-							                	rightType = Types.NUMBER;
-							                	//System.out.println("Mudei o tipo para Number = "+rightType);
-							                }
-							            }
-							         
+				 if (rightType == null) { rightType = Types.NUMBER; } 
+				             else { if (rightType.getValue() < Types.NUMBER.getValue()) { rightType = Types.NUMBER; } } 
 				}
 				break;
 			case TEXTO:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(174);
+				setState(173);
 				match(TEXTO);
-				  if (rightType == null) {
-							 				rightType = Types.TEXT;
-							 				//System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
-							            }
-							            else{
-							                if (rightType.getValue() < Types.TEXT.getValue()){			                    
-							                	rightType = Types.TEXT;
-							                	//System.out.println("Mudei o tipo para TEXT = "+rightType);
-							                	
-							                }
-							            }
-							         
+				 if (rightType == null) { rightType = Types.TEXT; } 
+				               else { if (rightType.getValue() < Types.TEXT.getValue()) { rightType = Types.TEXT; } } 
 				}
 				break;
 			default:
@@ -1101,21 +1048,21 @@ public class GrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(185);
+			setState(184);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==OP) {
 				{
 				{
-				setState(178);
+				setState(177);
 				match(OP);
 				 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
-				setState(180);
+				setState(179);
 				termo();
 				 strExprStack.push(strExprStack.pop() + _input.LT(-1).getText()); 
 				}
 				}
-				setState(187);
+				setState(186);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1133,7 +1080,7 @@ public class GrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u001d\u00bd\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0004\u0001\u001d\u00bc\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
 		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004"+
 		"\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007"+
 		"\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b"+
@@ -1159,17 +1106,17 @@ public class GrammarParser extends Parser {
 		"\u0005\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
 		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0007\u0001"+
 		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001"+
-		"\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001"+
-		"\t\u0001\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0001\n\u0001\n\u0001"+
-		"\n\u0003\n\u00b1\b\n\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001"+
-		"\u000b\u0005\u000b\u00b8\b\u000b\n\u000b\f\u000b\u00bb\t\u000b\u0001\u000b"+
-		"\u0000\u0000\f\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016"+
-		"\u0000\u0000\u00c1\u0000\u0018\u0001\u0000\u0000\u0000\u0002*\u0001\u0000"+
-		"\u0000\u0000\u0004F\u0001\u0000\u0000\u0000\u0006H\u0001\u0000\u0000\u0000"+
-		"\bf\u0001\u0000\u0000\u0000\ny\u0001\u0000\u0000\u0000\f\u008e\u0001\u0000"+
+		"\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\t\u0001"+
+		"\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0001\n\u0001\n\u0001\n\u0003"+
+		"\n\u00b0\b\n\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b"+
+		"\u0005\u000b\u00b7\b\u000b\n\u000b\f\u000b\u00ba\t\u000b\u0001\u000b\u0000"+
+		"\u0000\f\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0000"+
+		"\u0000\u00c0\u0000\u0018\u0001\u0000\u0000\u0000\u0002*\u0001\u0000\u0000"+
+		"\u0000\u0004F\u0001\u0000\u0000\u0000\u0006H\u0001\u0000\u0000\u0000\b"+
+		"f\u0001\u0000\u0000\u0000\ny\u0001\u0000\u0000\u0000\f\u008e\u0001\u0000"+
 		"\u0000\u0000\u000e\u0096\u0001\u0000\u0000\u0000\u0010\u009d\u0001\u0000"+
-		"\u0000\u0000\u0012\u00a6\u0001\u0000\u0000\u0000\u0014\u00b0\u0001\u0000"+
-		"\u0000\u0000\u0016\u00b9\u0001\u0000\u0000\u0000\u0018\u0019\u0005\u0001"+
+		"\u0000\u0000\u0012\u00a5\u0001\u0000\u0000\u0000\u0014\u00af\u0001\u0000"+
+		"\u0000\u0000\u0016\u00b8\u0001\u0000\u0000\u0000\u0018\u0019\u0005\u0001"+
 		"\u0000\u0000\u0019\u001a\u0005\u0015\u0000\u0000\u001a\u001c\u0006\u0000"+
 		"\uffff\uffff\u0000\u001b\u001d\u0003\u0002\u0001\u0000\u001c\u001b\u0001"+
 		"\u0000\u0000\u0000\u001d\u001e\u0001\u0000\u0000\u0000\u001e\u001c\u0001"+
@@ -1220,8 +1167,8 @@ public class GrammarParser extends Parser {
 		"\u0000\u0084\u0085\u0005\u0019\u0000\u0000\u0085\u0086\u0003\u0012\t\u0000"+
 		"\u0086\u0087\u0005\u0014\u0000\u0000\u0087\u0088\u0006\u0005\uffff\uffff"+
 		"\u0000\u0088\u0089\u0003\u0012\t\u0000\u0089\u008a\u0005\u001a\u0000\u0000"+
-		"\u008a\u008b\u0006\u0005\uffff\uffff\u0000\u008b\u008c\u0006\u0005\uffff"+
-		"\uffff\u0000\u008c\u008d\u0005\u0018\u0000\u0000\u008d\u000b\u0001\u0000"+
+		"\u008a\u008b\u0006\u0005\uffff\uffff\u0000\u008b\u008c\u0005\u0018\u0000"+
+		"\u0000\u008c\u008d\u0006\u0005\uffff\uffff\u0000\u008d\u000b\u0001\u0000"+
 		"\u0000\u0000\u008e\u008f\u0005\u0015\u0000\u0000\u008f\u0090\u0006\u0006"+
 		"\uffff\uffff\u0000\u0090\u0091\u0005\u0013\u0000\u0000\u0091\u0092\u0003"+
 		"\u0012\t\u0000\u0092\u0093\u0006\u0006\uffff\uffff\u0000\u0093\u0094\u0005"+
@@ -1232,22 +1179,21 @@ public class GrammarParser extends Parser {
 		"\u0005\u0018\u0000\u0000\u009c\u000f\u0001\u0000\u0000\u0000\u009d\u009e"+
 		"\u0005\u0011\u0000\u0000\u009e\u009f\u0005\u0019\u0000\u0000\u009f\u00a0"+
 		"\u0003\u0014\n\u0000\u00a0\u00a1\u0006\b\uffff\uffff\u0000\u00a1\u00a2"+
-		"\u0001\u0000\u0000\u0000\u00a2\u00a3\u0005\u001a\u0000\u0000\u00a3\u00a4"+
-		"\u0005\u0018\u0000\u0000\u00a4\u00a5\u0006\b\uffff\uffff\u0000\u00a5\u0011"+
-		"\u0001\u0000\u0000\u0000\u00a6\u00a7\u0003\u0014\n\u0000\u00a7\u00a8\u0006"+
-		"\t\uffff\uffff\u0000\u00a8\u00a9\u0003\u0016\u000b\u0000\u00a9\u0013\u0001"+
-		"\u0000\u0000\u0000\u00aa\u00ab\u0005\u0015\u0000\u0000\u00ab\u00b1\u0006"+
-		"\n\uffff\uffff\u0000\u00ac\u00ad\u0005\u0016\u0000\u0000\u00ad\u00b1\u0006"+
-		"\n\uffff\uffff\u0000\u00ae\u00af\u0005\u001c\u0000\u0000\u00af\u00b1\u0006"+
-		"\n\uffff\uffff\u0000\u00b0\u00aa\u0001\u0000\u0000\u0000\u00b0\u00ac\u0001"+
-		"\u0000\u0000\u0000\u00b0\u00ae\u0001\u0000\u0000\u0000\u00b1\u0015\u0001"+
-		"\u0000\u0000\u0000\u00b2\u00b3\u0005\u0012\u0000\u0000\u00b3\u00b4\u0006"+
-		"\u000b\uffff\uffff\u0000\u00b4\u00b5\u0003\u0014\n\u0000\u00b5\u00b6\u0006"+
-		"\u000b\uffff\uffff\u0000\u00b6\u00b8\u0001\u0000\u0000\u0000\u00b7\u00b2"+
-		"\u0001\u0000\u0000\u0000\u00b8\u00bb\u0001\u0000\u0000\u0000\u00b9\u00b7"+
-		"\u0001\u0000\u0000\u0000\u00b9\u00ba\u0001\u0000\u0000\u0000\u00ba\u0017"+
-		"\u0001\u0000\u0000\u0000\u00bb\u00b9\u0001\u0000\u0000\u0000\f\u001e$"+
-		"3;FU]as\u007f\u00b0\u00b9";
+		"\u0005\u001a\u0000\u0000\u00a2\u00a3\u0005\u0018\u0000\u0000\u00a3\u00a4"+
+		"\u0006\b\uffff\uffff\u0000\u00a4\u0011\u0001\u0000\u0000\u0000\u00a5\u00a6"+
+		"\u0003\u0014\n\u0000\u00a6\u00a7\u0006\t\uffff\uffff\u0000\u00a7\u00a8"+
+		"\u0003\u0016\u000b\u0000\u00a8\u0013\u0001\u0000\u0000\u0000\u00a9\u00aa"+
+		"\u0005\u0015\u0000\u0000\u00aa\u00b0\u0006\n\uffff\uffff\u0000\u00ab\u00ac"+
+		"\u0005\u0016\u0000\u0000\u00ac\u00b0\u0006\n\uffff\uffff\u0000\u00ad\u00ae"+
+		"\u0005\u001c\u0000\u0000\u00ae\u00b0\u0006\n\uffff\uffff\u0000\u00af\u00a9"+
+		"\u0001\u0000\u0000\u0000\u00af\u00ab\u0001\u0000\u0000\u0000\u00af\u00ad"+
+		"\u0001\u0000\u0000\u0000\u00b0\u0015\u0001\u0000\u0000\u0000\u00b1\u00b2"+
+		"\u0005\u0012\u0000\u0000\u00b2\u00b3\u0006\u000b\uffff\uffff\u0000\u00b3"+
+		"\u00b4\u0003\u0014\n\u0000\u00b4\u00b5\u0006\u000b\uffff\uffff\u0000\u00b5"+
+		"\u00b7\u0001\u0000\u0000\u0000\u00b6\u00b1\u0001\u0000\u0000\u0000\u00b7"+
+		"\u00ba\u0001\u0000\u0000\u0000\u00b8\u00b6\u0001\u0000\u0000\u0000\u00b8"+
+		"\u00b9\u0001\u0000\u0000\u0000\u00b9\u0017\u0001\u0000\u0000\u0000\u00ba"+
+		"\u00b8\u0001\u0000\u0000\u0000\f\u001e$3;FU]as\u007f\u00af\u00b8";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

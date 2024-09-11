@@ -1,11 +1,12 @@
 // Generated from /home/lucasabdalla/Documentos/GitHub/ufabc-compiler/Grammar.g4 by ANTLR 4.13.1
 
-	import java.util.ArrayList;
-	import java.util.Stack;
-	import java.util.HashMap;
-	import io.compiler.types.*;
-	import io.compiler.core.exceptions.*;
-	import io.compiler.core.ast.*;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.HashSet;
+    import java.util.Stack;
+    import io.compiler.types.*;
+    import io.compiler.core.exceptions.*;
+    import io.compiler.core.ast.*;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -97,38 +98,54 @@ public class GrammarLexer extends Lexer {
 	}
 
 
-	    private HashMap<String,Var> symbolTable = new HashMap<String, Var>();
-	    private ArrayList<Var> currentDecl = new ArrayList<Var>();
+	    private HashMap<String, Var> symbolTable = new HashMap<>();
+	    private HashSet<String> usedVariables = new HashSet<>();
+	    private ArrayList<Var> currentDecl = new ArrayList<>();
 	    private Types currentType;
-	    private Types leftType=null, rightType=null;
+	    private Types leftType = null, rightType = null;
 	    private Program program = new Program();
 	    private Stack<String> strExprStack = new Stack<>();
 	    private Stack<IfCommand> ifCommandStack = new Stack<>();
 	    private Stack<AttributeCommand> attribCommandStack = new Stack<>();
 	    private Stack<WhileCommand> whileCommandStack = new Stack<>();
 	    private Stack<DoWhileCommand> doWhileCommandStack = new Stack<>();
-	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
-	    
-	    
-	    public void updateType(){
-	    	for(Var v: currentDecl){
-	    	   v.setType(currentType);
-	    	   symbolTable.put(v.getId(), v);
-	    	}
+
+	    public void updateType() {
+	        for (Var v : currentDecl) {
+	            v.setType(currentType);
+	            symbolTable.put(v.getId(), v);
+	        }
 	    }
+
 	    public void exibirVar(){
 	        for (String id: symbolTable.keySet()){
 	        	System.out.println(symbolTable.get(id));
 	        }
 	    }
-	    
-	    public Program getProgram(){
-	    	return this.program;
-	    	}
-	    
-	    public boolean isDeclared(String id){
-	    	return symbolTable.get(id) != null;
+
+	    public void checkUnusedVariables() {
+	        for (String id : symbolTable.keySet()) {
+	            if (!usedVariables.contains(id)) {
+	                System.out.println("Warning: Variable " + id + " declared but not used.");
+	            }
+	        }
+	    }
+
+	    public void checkUndeclaredVariables() {
+	        for (String id : usedVariables) {
+	            if (!symbolTable.containsKey(id)) {
+	                System.out.println("Warning: Variable " + id + " used but not declared.");
+	            }
+	        }
+	    }
+
+	    public Program getProgram() {
+	        return this.program;
+	    }
+
+	    public boolean isDeclared(String id) {
+	        return symbolTable.get(id) != null;
 	    }
 
 
