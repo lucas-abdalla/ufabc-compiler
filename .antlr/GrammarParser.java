@@ -132,14 +132,6 @@ public class GrammarParser extends Parser {
 	        }
 	    }
 
-	    public void checkUninitializedVariables() {
-	        for (String id : symbolTable.keySet()) {
-	            if (!symbolTable.get(id).isInitialized()) {
-	                System.out.println("Warning: Variable " + id + " declared but not initialized.");
-	            }
-	        }
-	    }
-
 	    public Program getProgram() {
 	        return this.program;
 	    }
@@ -222,7 +214,6 @@ public class GrammarParser extends Parser {
 			match(T__3);
 			 
 			                checkUnusedVariables();
-			                checkUninitializedVariables();
 			                program.setSymbolTable(symbolTable);
 			                program.setCommandList(stack.pop());
 			            

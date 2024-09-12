@@ -127,14 +127,6 @@ public class GrammarLexer extends Lexer {
 	        }
 	    }
 
-	    public void checkUninitializedVariables() {
-	        for (String id : symbolTable.keySet()) {
-	            if (!symbolTable.get(id).isInitialized()) {
-	                System.out.println("Warning: Variable " + id + " declared but not initialized.");
-	            }
-	        }
-	    }
-
 	    public Program getProgram() {
 	        return this.program;
 	    }

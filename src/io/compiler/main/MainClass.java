@@ -13,15 +13,15 @@ import java.io.PrintWriter;
 
 public class MainClass {
     public static void main(String[] args) {
-        if (args.length != 1) {
+        /*if (args.length != 1) {
             System.err.println("Usage: java MainClass <file-path>");
             System.exit(1);
         }
 
-        String filePath = args[0];
+        String filePath = args[0];*/
 
         try {
-            GrammarLexer lexer = new GrammarLexer(CharStreams.fromFileName(filePath));
+            GrammarLexer lexer = new GrammarLexer(CharStreams.fromFileName("/home/lucasabdalla/Documentos/GitHub/ufabc-compiler/inputs/teste.in"));
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
             GrammarParser parser = new GrammarParser(tokenStream);
 
